@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("androidx.navigation.safeargs.kotlin")
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -25,6 +25,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_API_URL", "${project.findProperty("VYNILS_BASE_API_URL_RELEASE")}")
+        }
+        debug {
+            buildConfigField("String", "BASE_API_URL", "${project.findProperty("VYNILS_BASE_API_URL_DEBUG")}")
         }
     }
     compileOptions {
@@ -38,6 +42,7 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
     }
 
 }
