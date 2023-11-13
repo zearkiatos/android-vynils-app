@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.androidvynils.app.adapters.CommentApiServiceAdapter
 import com.androidvynils.app.models.Comment
+import com.androidvynils.app.repositories.CommentsRepository
 
 class CommentViewModel(application: Application, albumId: Int) :  AndroidViewModel(application)  {
     val id:Int = albumId
     private val _comments = MutableLiveData<List<Comment>>()
+    private val commentsRepository = CommentsRepository(application)
 
     val comments: LiveData<List<Comment>>
         get() = _comments
@@ -30,7 +32,7 @@ class CommentViewModel(application: Application, albumId: Int) :  AndroidViewMod
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
     private fun refreshDataFromAdapter() {
-        CommentApiServiceAdapter.getInstance(getApplication()).getComments(id,{
+        commentsRepository.refreshData({
             _comments.postValue(it)
             _eventNetworkError.value = false
             _isNetworkErrorShown.value = false

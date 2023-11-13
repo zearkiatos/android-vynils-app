@@ -9,9 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.androidvynils.app.adapters.CollectorApiServiceAdapter
 
 import com.androidvynils.app.models.Collector
+import com.androidvynils.app.repositories.CollectorsRepository
 
 class CollectorViewModel(application: Application) :  AndroidViewModel(application) {
     private val _collectors = MutableLiveData<List<Collector>>()
+    private val collectorsRepository = CollectorsRepository(application)
 
     val collectors: LiveData<List<Collector>>
         get() = _collectors
@@ -31,7 +33,7 @@ class CollectorViewModel(application: Application) :  AndroidViewModel(applicati
     }
 
     private fun refreshDataFromAdapter() {
-        CollectorApiServiceAdapter.getInstance(getApplication()).getCollectors({
+        collectorsRepository.refreshData({
             _collectors.postValue(it)
             _eventNetworkError.value = false
             _isNetworkErrorShown.value = false
