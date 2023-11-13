@@ -8,9 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.androidvynils.app.adapters.AlbumApiServiceAdapter
 import com.androidvynils.app.models.Album
+import com.androidvynils.app.repositories.AlbumRepository
 
 class AlbumViewModel(application: Application): AndroidViewModel(application) {
     private val _albums = MutableLiveData<List<Album>>()
+    private val albumRepository = AlbumRepository(application)
 
     val albums: LiveData<List<Album>>
         get() = _albums
@@ -30,7 +32,7 @@ class AlbumViewModel(application: Application): AndroidViewModel(application) {
     }
 
     private fun refreshDataFromAdapter() {
-        AlbumApiServiceAdapter.getInstance(getApplication()).getAlbums({
+        albumRepository.refreshData({
             _albums.postValue(it)
             _eventNetworkError.value = false
             _isNetworkErrorShown.value = false
