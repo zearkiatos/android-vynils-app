@@ -1,6 +1,7 @@
 package com.androidvynils.app.viewModels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,13 +33,16 @@ class AlbumViewModel(application: Application): AndroidViewModel(application) {
     }
 
     private fun refreshDataFromAdapter() {
-        albumRepository.refreshData({
-            _albums.postValue(it)
+        try {
+            val data = albumRepository.refreshData()
+            _albums.postValue(data)
             _eventNetworkError.value = false
             _isNetworkErrorShown.value = false
-        },{
+        }
+        catch(ex: Exception) {
+            Log.d("Error", ex.toString())
             _eventNetworkError.value = true
-        })
+        }
     }
 
     fun onNetworkErrorShown() {

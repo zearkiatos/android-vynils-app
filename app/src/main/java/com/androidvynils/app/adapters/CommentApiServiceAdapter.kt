@@ -31,22 +31,23 @@ class CommentApiServiceAdapter constructor(context: Context) {
         // applicationContext keeps you from leaking the Activity or BroadcastReceiver if someone passes one in.
         Volley.newRequestQueue(context.applicationContext)
     }
-    fun getComments(albumId:Int, onComplete:(resp:List<Comment>)->Unit, onError: (error:VolleyError)->Unit) {
+    fun getComments(albumId:Int):List<Comment> {
+        var comments = mutableListOf<Comment>()
         requestQueue.add(getRequest("albums/$albumId/comments",
             Response.Listener<String> { response ->
                 val resp = JSONArray(response)
-                val list = mutableListOf<Comment>()
                 var item: JSONObject? = null
                 for (i in 0 until resp.length()) {
                     item = resp.getJSONObject(i)
                     Log.d("Response", item.toString())
-                    list.add(i, Comment(albumId = albumId, rating = item.getInt("rating").toString(), description = item.getString("description")))
+                    val comment = Comment(albumId = albumId, rating = item.getInt("rating").toString(), description = item.getString("description"))
+                    comments.add(i, comment)
                 }
-                onComplete(list)
             },
             Response.ErrorListener {
-                onError(it)
+                throw it
             }))
+        return comments
     }
     fun postComment(body: JSONObject, albumId: Int,  onComplete:(resp:JSONObject)->Unit , onError: (error:VolleyError)->Unit){
         requestQueue.add(postRequest("albums/$albumId/comments",

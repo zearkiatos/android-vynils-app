@@ -1,6 +1,7 @@
 package com.androidvynils.app.viewModels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,13 +33,16 @@ class CommentViewModel(application: Application, albumId: Int) :  AndroidViewMod
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
     private fun refreshDataFromAdapter() {
-        commentsRepository.refreshData({
-            _comments.postValue(it)
+        try {
+            val data = commentsRepository.refreshDataById(this.id)
+            _comments.postValue(data)
             _eventNetworkError.value = false
             _isNetworkErrorShown.value = false
-        },{
+        }
+        catch(ex: Exception) {
+            Log.d("Error", ex.toString())
             _eventNetworkError.value = true
-        })
+        }
     }
 
     fun onNetworkErrorShown() {

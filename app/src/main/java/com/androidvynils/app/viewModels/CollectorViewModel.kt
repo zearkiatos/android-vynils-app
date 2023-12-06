@@ -1,6 +1,7 @@
 package com.androidvynils.app.viewModels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,13 +34,16 @@ class CollectorViewModel(application: Application) :  AndroidViewModel(applicati
     }
 
     private fun refreshDataFromAdapter() {
-        collectorsRepository.refreshData({
-            _collectors.postValue(it)
+        try {
+            val data = collectorsRepository.refreshData()
+            _collectors.postValue(data)
             _eventNetworkError.value = false
             _isNetworkErrorShown.value = false
-        },{
+        }
+        catch(ex:Exception) {
+            Log.d("Error", ex.toString())
             _eventNetworkError.value = true
-        })
+        }
     }
 
     fun onNetworkErrorShown() {

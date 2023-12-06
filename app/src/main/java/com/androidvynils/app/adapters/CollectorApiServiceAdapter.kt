@@ -28,21 +28,22 @@ class CollectorApiServiceAdapter constructor(context: Context) {
         Volley.newRequestQueue(context.applicationContext)
     }
 
-    fun getCollectors(  onComplete:(resp:List<Collector>)->Unit , onError: (error: VolleyError)->Unit) {
+    fun getCollectors(): List<Collector> {
+        var collectors = mutableListOf<Collector>()
         requestQueue.add(getRequest("collectors",
             Response.Listener<String> { response ->
                 Log.d("tagb", response)
                 val resp = JSONArray(response)
-                val list = mutableListOf<Collector>()
                 for (i in 0 until resp.length()) {
                     val item = resp.getJSONObject(i)
-                    list.add(i, Collector(collectorId = item.getInt("id"),name = item.getString("name"), telephone = item.getString("telephone"), email = item.getString("email")))
+                    val collector = Collector(collectorId = item.getInt("id"),name = item.getString("name"), telephone = item.getString("telephone"), email = item.getString("email"))
+                    collectors.add(i, collector)
                 }
-                onComplete(list)
             },
             Response.ErrorListener {
-                onError(it)
+                throw it
             }))
+        return collectors
     }
 
     private fun getRequest(path:String, responseListener: Response.Listener<String>, errorListener: Response.ErrorListener): StringRequest {

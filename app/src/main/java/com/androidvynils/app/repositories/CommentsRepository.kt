@@ -11,15 +11,11 @@ class CommentsRepository(val application: Application) : Repository<Comment, Vol
     /*  override fun refreshData(callback: (List<Comment>)->Unit, onError: (VolleyError)->Unit){
 Not
     } */
-    override fun refreshData(callback: (List<Comment>) -> Unit, onError: (VolleyError) -> Unit) {
+    override fun refreshData(): List<Comment> {
         TODO("Not yet implemented")
     }
 
-    fun refreshDataById(albumId: Int, callback: (List<Comment>)->Unit, onError: (VolleyError)->Unit) {
-        CommentApiServiceAdapter.getInstance(application).getComments(albumId, {
-            callback(it)
-        },
-            onError
-        )
+    fun refreshDataById(albumId: Int):List<Comment> {
+        return CommentApiServiceAdapter.getInstance(application).getComments(albumId)
     }
 }
