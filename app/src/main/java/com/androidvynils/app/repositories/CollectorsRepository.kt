@@ -7,7 +7,7 @@ import com.androidvynils.app.models.Collector
 
 
 class CollectorsRepository(val application: Application): Repository<Collector, VolleyError> {
-    override fun refreshData(): List<Collector>{
+    override suspend fun refreshData(): List<Collector>{
         return CollectorApiServiceAdapter.getInstance(application).getCollectors()
     }
 }

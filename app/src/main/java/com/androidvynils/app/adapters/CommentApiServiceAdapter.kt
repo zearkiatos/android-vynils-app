@@ -12,6 +12,9 @@ import com.android.volley.toolbox.Volley
 import com.androidvynils.app.models.Comment
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 import com.androidvynils.app.BuildConfig as Config
 
@@ -31,7 +34,7 @@ class CommentApiServiceAdapter constructor(context: Context) {
         // applicationContext keeps you from leaking the Activity or BroadcastReceiver if someone passes one in.
         Volley.newRequestQueue(context.applicationContext)
     }
-    fun getComments(albumId:Int):List<Comment> {
+    suspend fun getComments(albumId:Int) = suspendCoroutine<List<Comment>> { context ->
         var comments = mutableListOf<Comment>()
         requestQueue.add(getRequest("albums/$albumId/comments",
             Response.Listener<String> { response ->
@@ -43,11 +46,11 @@ class CommentApiServiceAdapter constructor(context: Context) {
                     val comment = Comment(albumId = albumId, rating = item.getInt("rating").toString(), description = item.getString("description"))
                     comments.add(i, comment)
                 }
+                context.resume(comments)
             },
             Response.ErrorListener {
-                throw it
+                context.resumeWithException(it)
             }))
-        return comments
     }
     fun postComment(body: JSONObject, albumId: Int,  onComplete:(resp:JSONObject)->Unit , onError: (error:VolleyError)->Unit){
         requestQueue.add(postRequest("albums/$albumId/comments",

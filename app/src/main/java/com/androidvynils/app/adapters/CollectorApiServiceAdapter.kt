@@ -10,6 +10,9 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.androidvynils.app.models.Collector
 import org.json.JSONArray
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import com.androidvynils.app.BuildConfig as Config
 
 class CollectorApiServiceAdapter constructor(context: Context) {
@@ -28,7 +31,7 @@ class CollectorApiServiceAdapter constructor(context: Context) {
         Volley.newRequestQueue(context.applicationContext)
     }
 
-    fun getCollectors(): List<Collector> {
+    suspend fun getCollectors() = suspendCoroutine<List<Collector>> { context ->
         var collectors = mutableListOf<Collector>()
         requestQueue.add(getRequest("collectors",
             Response.Listener<String> { response ->
@@ -39,11 +42,11 @@ class CollectorApiServiceAdapter constructor(context: Context) {
                     val collector = Collector(collectorId = item.getInt("id"),name = item.getString("name"), telephone = item.getString("telephone"), email = item.getString("email"))
                     collectors.add(i, collector)
                 }
+                context.resume(collectors)
             },
             Response.ErrorListener {
-                throw it
+                context.resumeWithException(it)
             }))
-        return collectors
     }
 
     private fun getRequest(path:String, responseListener: Response.Listener<String>, errorListener: Response.ErrorListener): StringRequest {

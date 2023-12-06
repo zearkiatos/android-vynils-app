@@ -7,7 +7,7 @@ import com.androidvynils.app.adapters.AlbumApiServiceAdapter
 
 
 class AlbumRepository(val application: Application): Repository<Album, VolleyError> {
-    override fun refreshData(): List<Album> {
+    override suspend fun refreshData(): List<Album> {
         return AlbumApiServiceAdapter.getInstance(application).getAlbums()
     }
 }

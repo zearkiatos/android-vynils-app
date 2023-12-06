@@ -10,6 +10,9 @@ import com.android.volley.toolbox.Volley
 import com.androidvynils.app.models.Album
 import com.androidvynils.app.models.Collector
 import org.json.JSONArray
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import com.androidvynils.app.BuildConfig as Config
 
 
@@ -28,7 +31,7 @@ class AlbumApiServiceAdapter constructor(context: Context) {
         // applicationContext keeps you from leaking the Activity or BroadcastReceiver if someone passes one in.
         Volley.newRequestQueue(context.applicationContext)
     }
-    fun getAlbums(): List<Album>{
+    suspend fun getAlbums() = suspendCoroutine<List<Album>> { context ->
         var albums = mutableListOf<Album>()
         requestQueue.add(getRequest("albums",
             Response.Listener<String> { response ->
@@ -38,12 +41,11 @@ class AlbumApiServiceAdapter constructor(context: Context) {
                     val album = Album(albumId = item.getInt("id"),name = item.getString("name"), cover = item.getString("cover"), recordLabel = item.getString("recordLabel"), releaseDate = item.getString("releaseDate"), genre = item.getString("genre"), description = item.getString("description"))
                     albums.add(i, album)
                 }
+                context.resume(albums)
             },
             Response.ErrorListener {
-                throw it
+                context.resumeWithException(it)
             }))
-
-        return albums
     }
 
     private fun getRequest(path:String, responseListener: Response.Listener<String>, errorListener: Response.ErrorListener): StringRequest {
