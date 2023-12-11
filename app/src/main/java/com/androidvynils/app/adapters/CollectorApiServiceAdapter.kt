@@ -10,6 +10,9 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.androidvynils.app.models.Collector
 import org.json.JSONArray
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import com.androidvynils.app.BuildConfig as Config
 
 class CollectorApiServiceAdapter constructor(context: Context) {
@@ -28,20 +31,21 @@ class CollectorApiServiceAdapter constructor(context: Context) {
         Volley.newRequestQueue(context.applicationContext)
     }
 
-    fun getCollectors(  onComplete:(resp:List<Collector>)->Unit , onError: (error: VolleyError)->Unit) {
+    suspend fun getCollectors() = suspendCoroutine<List<Collector>> { context ->
+        var collectors = mutableListOf<Collector>()
         requestQueue.add(getRequest("collectors",
             Response.Listener<String> { response ->
                 Log.d("tagb", response)
                 val resp = JSONArray(response)
-                val list = mutableListOf<Collector>()
                 for (i in 0 until resp.length()) {
                     val item = resp.getJSONObject(i)
-                    list.add(i, Collector(collectorId = item.getInt("id"),name = item.getString("name"), telephone = item.getString("telephone"), email = item.getString("email")))
+                    val collector = Collector(collectorId = item.getInt("id"),name = item.getString("name"), telephone = item.getString("telephone"), email = item.getString("email"))
+                    collectors.add(i, collector)
                 }
-                onComplete(list)
+                context.resume(collectors)
             },
             Response.ErrorListener {
-                onError(it)
+                context.resumeWithException(it)
             }))
     }
 
