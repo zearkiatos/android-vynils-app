@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs")
     id("org.jetbrains.kotlin.kapt")
+    id("org.jetbrains.kotlin.plugin.serialization")  version "1.9.21"
 }
 
 android {
@@ -61,6 +62,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation( "com.github.bumptech.glide:glide:4.8.0")
     implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     kapt("androidx.room:room-compiler:$roomVersion")
     annotationProcessor("com.github.bumptech.glide:compiler:4.8.0")
     testImplementation("junit:junit:4.13.2")
