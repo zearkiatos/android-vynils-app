@@ -1,8 +1,8 @@
-val roomVersion = "2.4.0-alpha03"
+val roomVersion = "2.3.0"
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("androidx.navigation.safeargs")
+    id("androidx.navigation.safeargs.kotlin")
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.serialization")  version "1.9.21"
 }

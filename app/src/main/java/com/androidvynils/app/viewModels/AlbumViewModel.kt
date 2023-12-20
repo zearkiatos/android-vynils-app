@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.androidvynils.app.adapters.AlbumApiServiceAdapter
 import com.androidvynils.app.models.Album
 import com.androidvynils.app.repositories.AlbumRepository
 import kotlinx.coroutines.Dispatchers

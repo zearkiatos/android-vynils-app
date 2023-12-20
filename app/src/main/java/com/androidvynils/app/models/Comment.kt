@@ -1,6 +1,7 @@
 package com.androidvynils.app.models
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,5 +9,7 @@ import kotlinx.serialization.Serializable
 data class Comment(
     val description:String,
     val rating:String,
-    val albumId:Int
+    val albumId:Int,
+    @PrimaryKey(autoGenerate = true)
+    val commentId:Int = 0
 )

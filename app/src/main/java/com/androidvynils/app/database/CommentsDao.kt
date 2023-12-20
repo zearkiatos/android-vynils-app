@@ -1,10 +1,12 @@
-package com.androidvynils.app.database.dao
+package com.androidvynils.app.database
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.androidvynils.app.models.Comment
 
+@Dao
 interface CommentsDao {
     @Query("SELECT * FROM comments WHERE albumId = :albumId ORDER BY rating DESC")
     fun getComments(albumId:Int):List<Comment>
