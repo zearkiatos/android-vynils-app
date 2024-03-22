@@ -1,7 +1,11 @@
 package com.androidvynils.app.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "albums")
 data class Album (
-    val albumId:Int,
+    @PrimaryKey val albumId:Int,
     val name:String,
     val cover:String,
     val releaseDate:String,
