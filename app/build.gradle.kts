@@ -1,10 +1,8 @@
-val roomVersion = "2.3.0"
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("androidx.navigation.safeargs.kotlin")
     id("org.jetbrains.kotlin.kapt")
-    id("org.jetbrains.kotlin.plugin.serialization")  version "1.9.21"
+    id("com.android.application")
+    id("kotlin-android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -45,7 +43,6 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
-        buildConfig = true
     }
 
 }
@@ -61,12 +58,12 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation( "com.github.bumptech.glide:glide:4.8.0")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-ktx:2.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:2.3.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.8.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.room:room-testing:$roomVersion")
+    androidTestImplementation("androidx.room:room-testing:2.3.0")
 }
