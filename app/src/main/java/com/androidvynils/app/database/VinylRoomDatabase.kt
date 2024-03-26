@@ -23,15 +23,20 @@ abstract class VinylRoomDatabase : RoomDatabase() {
         fun getDatabase(context: Context): VinylRoomDatabase {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    VinylRoomDatabase::class.java,
-                    "vinyls_database"
-                ).build()
-                INSTANCE = instance
-                // return instance
-                instance
+            try {
+                return INSTANCE ?: synchronized(this) {
+                    val instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        VinylRoomDatabase::class.java,
+                        "vinyls_database"
+                    ).build()
+                    INSTANCE = instance
+                    instance
+                }
+            }
+            catch(e: Exception) {
+                println("Some error ocurred")
+                throw Exception("Some error ocurred")
             }
         }
     }

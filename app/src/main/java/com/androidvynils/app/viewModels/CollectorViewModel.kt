@@ -8,17 +8,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.androidvynils.app.adapters.CollectorApiServiceAdapter
-
+import com.androidvynils.app.database.VinylRoomDatabase
 import com.androidvynils.app.models.Collector
-import com.androidvynils.app.repositories.CollectorsRepository
+import com.androidvynils.app.repositories.CollectorsCacheRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class CollectorViewModel(application: Application) :  AndroidViewModel(application) {
     private val _collectors = MutableLiveData<List<Collector>>()
-    private val collectorsRepository = CollectorsRepository(application)
+    private val collectorsRepository = CollectorsCacheRepository(application, VinylRoomDatabase.getDatabase(application.applicationContext).collectorsDao())
 
     val collectors: LiveData<List<Collector>>
         get() = _collectors
