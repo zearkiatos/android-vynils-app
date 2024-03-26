@@ -8,16 +8,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.androidvynils.app.adapters.AlbumApiServiceAdapter
+import com.androidvynils.app.database.VinylRoomDatabase
 import com.androidvynils.app.models.Album
-import com.androidvynils.app.repositories.AlbumRepository
+import com.androidvynils.app.repositories.AlbumCacheRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AlbumViewModel(application: Application): AndroidViewModel(application) {
     private val _albums = MutableLiveData<List<Album>>()
-    private val albumRepository = AlbumRepository(application)
+    private val albumRepository = AlbumCacheRepository(application, VinylRoomDatabase.getDatabase(application.applicationContext).albumsDao())
 
     val albums: LiveData<List<Album>>
         get() = _albums
