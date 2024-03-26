@@ -8,9 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.androidvynils.app.adapters.CommentApiServiceAdapter
+import com.androidvynils.app.database.VinylRoomDatabase
 import com.androidvynils.app.models.Comment
-import com.androidvynils.app.repositories.CommentsRepository
+import com.androidvynils.app.repositories.CommentsCacheRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 class CommentViewModel(application: Application, albumId: Int) :  AndroidViewModel(application)  {
     val id:Int = albumId
     private val _comments = MutableLiveData<List<Comment>>()
-    private val commentsRepository = CommentsRepository(application)
+    private val commentsRepository = CommentsCacheRepository(application, VinylRoomDatabase.getDatabase(application.applicationContext).commentsDao())
 
     val comments: LiveData<List<Comment>>
         get() = _comments
